@@ -1,0 +1,6 @@
+.env
+.yarn
+.pnp.cjs
+.pnp.loader.mjs
+node_modules
+api/src/generated/prisma
