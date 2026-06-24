@@ -2,7 +2,7 @@
   "name": "auth_training",
   "packageManager": "yarn@4.14.1",
   "scripts": {
-    "dev": "tsx watch src/index.ts",
+    "dev": "tsx watch index.ts",
     "build": "tsc",
     "start": "node dist/index.ts"
   },
@@ -10,7 +10,9 @@
     "@prisma/client": "^7.8.0",
     "bcrypt": "^6.0.0",
     "cookie-parser": "^1.4.7",
+    "dotenv": "^17.4.2",
     "express": "^5.2.1",
+    "helmet": "^8.2.0",
     "jsonwebtoken": "^9.0.3",
     "prisma": "^7.8.0",
     "zod": "^4.4.3"
