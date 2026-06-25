@@ -1,13 +1,31 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
-// Get a free hosted Postgres database in seconds: `npx create-db`
-
 generator client {
   provider = "prisma-client"
   output   = "../src/generated/prisma"
 }
 
 datasource db {
-  provider = "postgresql"
+  provider = "mysql"
+}
+
+model REFRESH_TOKENS {
+  ID         Int       @id @default(autoincrement())
+  USER_ID    Int
+  TOKEN_HASH String    @db.VarChar(255)
+  EXPIRES_AT DateTime  @db.Timestamp(0)
+  REVOKED_AT DateTime? @db.Timestamp(0)
+  CREATED_AT DateTime  @default(now()) @db.Timestamp(0)
+  USERS      USERS     @relation(fields: [USER_ID], references: [ID], onDelete: Cascade, onUpdate: NoAction, map: "FK_REFRESH_TOKENS_USER")
+
+  @@index([USER_ID], map: "FK_REFRESH_TOKENS_USER")
+}
+
+model USERS {
+  ID             Int              @id @default(autoincrement())
+  NAME           String           @db.VarChar(150)
+  EMAIL          String           @unique(map: "EMAIL") @db.VarChar(255)
+  PASSWORD_HASH  String           @db.VarChar(255)
+  IS_ACTIVE      Boolean          @default(true)
+  CREATED_AT     DateTime         @default(now()) @db.Timestamp(0)
+  UPDATED_AT     DateTime         @default(now()) @db.Timestamp(0)
+  REFRESH_TOKENS REFRESH_TOKENS[]
 }
