@@ -1,25 +1,7 @@
 import AuthService from "./auth.services";
-import cookieParser from "cookie-parser";
 import { Request, Response } from "express";
 
 export default class AuthController {
-
-    static async create(req: Request, res: Response) {
-        try {
-
-            const body = await req.body;
-
-            const result = await AuthService.create(body);
-
-            res.status(200).json({
-                message: "Uusário criado com sucesso",
-                user: result
-            });
-
-        } catch (err) {
-            return res.status(401).json(err);
-        };
-    };
 
     static async login(req: Request, res: Response) {
         try {

@@ -1,36 +1,16 @@
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
-import { CreateUserBody, createUserSchema, LoginBody, loginUserSchema } from "./auth.schemas";
-import { AuthRepository } from "./auth.repositories";
+import { LoginBody, loginUserSchema } from "./auth.schemas";
+import { UserRepository } from "../users/users.repositories";
 import { AppError } from "../../error/app-error";
 
 export default class AuthService {
-
-    static async create(body: CreateUserBody) {
-
-        try {
-
-            const data = createUserSchema.parse(body);
-            const hashPassword = await bcrypt.hash(data.PASSWORD, 12);
-
-            const parsedData = {
-                NAME: data.NAME,
-                EMAIL: data.EMAIL,
-                PASSWORD_HASH: hashPassword
-            };
-
-            return await AuthRepository.createUser(parsedData);
-
-        } catch (err) {
-            throw err;
-        };
-    };
 
     static async login(body: LoginBody) {
         try {
 
             const data = loginUserSchema.parse(body);
-            const user = await AuthRepository.getUserByEmail(data.email);
+            const user = await UserRepository.getUserByEmail(data.email);
 
             if (!user) throw new AppError("Senha ou email inválidos.", 401);
 
