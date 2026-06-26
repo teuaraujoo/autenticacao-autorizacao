@@ -8,9 +8,9 @@ const passwordSchema = z.string()
     .regex(/[^A-Za-z0-9]/, { message: "A senha deve conter pelo menos um caractere especial (ex: !@#$%^&*)." });
 
 export const createUserSchema = z.object({
-    NAME: z.string().min(4, "O nome deve ter pelo menos 4 caracteres."),
-    EMAIL: z.email("Informe um email válido."),
-    PASSWORD: passwordSchema
+    name: z.string().min(4, "O nome deve ter pelo menos 4 caracteres."),
+    email: z.email("Informe um email válido."),
+    password: passwordSchema
 });
 
 export type CreateUserBody = z.infer<typeof createUserSchema>;

@@ -1,6 +1,6 @@
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
-import { AppError } from "../../error/app-error";
+import ApiError from "../../error/app-error";
 import { CreateUserBody, createUserSchema } from "./users.schemas";
 import { UserRepository } from "./users.repositories";
 
@@ -10,15 +10,15 @@ export class UserServices {
         try {
 
             const data = createUserSchema.parse(body);
-            const user = await UserRepository.getUserByEmail(data.EMAIL);
+            const user = await UserRepository.getUserByEmail(data.email);
 
-            if (user) throw new AppError("Usuário já cadastrado com esse email.", 409);
+            if (user) throw new ApiError("Usuário já cadastrado com esse email.", 409);
 
-            const hashPassword = await bcrypt.hash(data.PASSWORD, 12);
+            const hashPassword = await bcrypt.hash(data.password, 12);
 
             const parsedData = {
-                NAME: data.NAME,
-                EMAIL: data.EMAIL,
+                NAME: data.name,
+                EMAIL: data.email,
                 PASSWORD_HASH: hashPassword
             };
 

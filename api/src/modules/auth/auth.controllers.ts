@@ -1,16 +1,61 @@
 import AuthService from "./auth.services";
 import { Request, Response } from "express";
-
+import ApiError from "../../error/app-error";
+import { TokenExpiredError } from "jsonwebtoken";
 export default class AuthController {
 
     static async login(req: Request, res: Response) {
+        const body = await req.body;
+
+        const result = await AuthService.login(body);
+
+        res.cookie("accessToken", result.accessToken, {
+            httpOnly: true,
+            secure: process.env.NODE_ENV === "production",
+            sameSite: process.env.NODE_ENV === "production" ? "none" : "lax",
+            maxAge: 1000 * 60 * 100,
+            path: "/"
+        });
+
+        res.cookie("refreshToken", result.refreshToken, {
+            httpOnly: true,
+            secure: process.env.NODE_ENV === "production",
+            sameSite: process.env.NODE_ENV === "production" ? "none" : "lax",
+            maxAge: 7 * 24 * 60 * 60 * 1000,
+            path: "/"
+        })
+
+        return res.status(200).json({
+            message: `Login realizado com sucesso. Bem vindo ${result.user.name}`,
+        });
+    };
+
+    static async logout(req: Request, res: Response) {
+
+        const revokedToken = await AuthService.logout(req.refreshToken);
+
+        res.clearCookie("accessToken", {
+            httpOnly: true,
+            secure: process.env.NODE_ENV === "production",
+            sameSite: process.env.NODE_ENV === "production" ? "none" : "lax",
+            path: "/"
+        });
+
+        res.clearCookie("refreshToken", {
+            httpOnly: true,
+            secure: process.env.NODE_ENV === "production",
+            sameSite: process.env.NODE_ENV === "production" ? "none" : "lax",
+            path: "/"
+        });
+
+        return res.status(200).json({ message: "Logout  realizado com sucesso.", data: revokedToken });
+    };
+
+    static async refresh(req: Request, res: Response) {
         try {
+            const result = await AuthService.refresh(req.refreshToken);
 
-            const body = await req.body;
-
-            const result = await AuthService.login(body);
-
-            res.cookie('', result.token, {
+            res.cookie("accessToken", result.accessToken, {
                 httpOnly: true,
                 secure: process.env.NODE_ENV === "production",
                 sameSite: process.env.NODE_ENV === "production" ? "none" : "lax",
@@ -18,17 +63,28 @@ export default class AuthController {
                 path: "/"
             });
 
-            return res.status(200).json({
-                message: `Login realizado com sucesso. Bem vindo ${result.user.name}`,
-            });
-
+            res.status(200).json({ message: "Token renovado com sucesso." });
 
         } catch (err) {
-            return res.status(401).json(err);
+            if (err instanceof ApiError && err.statusCode === 401) {
+
+                res.clearCookie("accessToken");
+                res.clearCookie("refreshToken");
+
+                return res.status(err.statusCode).json({
+                    message: err.message,
+                });
+            };
+
+            return res.status(500).json({
+                message: "Erro interno do servidor.",
+            });
         };
     };
 
-    static async logout() {
+    static async me(req: Request, res: Response) {
+        const result = await AuthService.me(req.user.email);
 
-    }
+        return res.status(200).json({ message: "Informações encontradas com sucesso.", data: result.user });
+    };
 };
