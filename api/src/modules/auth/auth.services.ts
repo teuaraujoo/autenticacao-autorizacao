@@ -5,6 +5,7 @@ import { LoginBody, loginUserSchema } from "./auth.schemas";
 import { UserRepository } from "../users/users.repositories";
 import ApiError from "../../error/app-error";
 import { AuthRepository } from "./auth.repositories";
+import EmailService from "../email/email.services";
 
 export default class AuthService {
 
