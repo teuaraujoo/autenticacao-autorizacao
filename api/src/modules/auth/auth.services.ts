@@ -5,7 +5,6 @@ import { LoginBody, loginUserSchema } from "./auth.schemas";
 import { UserRepository } from "../users/users.repositories";
 import ApiError from "../../error/app-error";
 import { AuthRepository } from "./auth.repositories";
-import EmailService from "../email/email.services";
 
 export default class AuthService {
 
@@ -116,6 +115,23 @@ export default class AuthService {
                     email: user?.EMAIL
                 },
             };
+
+        } catch (err) {
+            throw err;
+        };
+    };
+
+    static async confirmEmail(userId: number) {
+        try {
+            const user = UserRepository.getById(userId);
+
+            if (!user) throw new ApiError("Usuário não encontrado.", 404); 
+
+            const emailConfirmed = await UserRepository.confirmEmail(userId);
+
+            if (!emailConfirmed) throw new ApiError("Error ao confirmar email do usuário", 400);
+
+            return user;
 
         } catch (err) {
             throw err;

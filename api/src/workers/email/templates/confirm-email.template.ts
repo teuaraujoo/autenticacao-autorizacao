@@ -1,4 +1,6 @@
-export function welcomeTemplate(name: string) {
+import "dotenv/config";
+
+export function confirmEmailTemplate(name: string, userId: number) {
     return `
 <!DOCTYPE html>
 <html lang="pt-BR">
@@ -25,11 +27,11 @@ Bem-vindo, ${name}!
 
 <p style="margin-top:24px;color:#4b5563;font-size:16px;line-height:1.8;">
 Sua conta foi criada com sucesso.
-Agora você já pode acessar a plataforma e aproveitar todos os recursos disponíveis.
+Para poder acessar a plataforma e aproveitar todos os recursos disponíveis, confirme seu email no botão abaixo:
 </p>
 
 <a
-href="#"
+href="${process.env.API_URL}/api/confirm-email/${userId} "
 style="
 display:inline-block;
 margin-top:32px;
@@ -40,7 +42,7 @@ text-decoration:none;
 border-radius:8px;
 font-weight:bold;
 ">
-Acessar Plataforma
+Confirmar Email
 </a>
 
 <hr style="margin:48px 0;border:none;border-top:1px solid #e5e7eb;">

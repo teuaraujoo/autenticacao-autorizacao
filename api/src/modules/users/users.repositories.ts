@@ -14,4 +14,8 @@ export class UserRepository {
     static async createUser(user: Prisma.USERSCreateInput) {
         return prisma.uSERS.create({ data: user });
     };
+
+    static async confirmEmail(userId: number) {
+        return prisma.uSERS.update({ where: { ID: userId }, data: { EMAIL_VERIFY: true } });
+    };
 };

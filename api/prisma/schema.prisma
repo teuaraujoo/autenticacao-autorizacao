@@ -27,5 +27,6 @@ model USERS {
   IS_ACTIVE      Boolean          @default(true)
   CREATED_AT     DateTime         @default(now()) @db.Timestamp(0)
   UPDATED_AT     DateTime         @default(now()) @db.Timestamp(0)
+  EMAIL_VERIFY   Boolean?         @default(false)
   REFRESH_TOKENS REFRESH_TOKENS[]
 }

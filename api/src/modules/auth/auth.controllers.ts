@@ -87,4 +87,12 @@ export default class AuthController {
 
         return res.status(200).json({ message: "Informações encontradas com sucesso.", data: result.user });
     };
+
+    static async confirmEmail(req: Request, res: Response) {
+        const { userId } = req.params;
+
+        await AuthService.confirmEmail(Number(userId));
+
+        return res.status(200).json({ message: "Email confirmado com sucesso." });
+    };
 };

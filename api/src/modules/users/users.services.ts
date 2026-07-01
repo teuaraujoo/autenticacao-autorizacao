@@ -23,12 +23,13 @@ export class UserServices {
                 PASSWORD_HASH: hashPassword
             };
 
-            await UserRepository.createUser(parsedData);
+            const createdUser = await UserRepository.createUser(parsedData);
 
-            const job = await emailQueue.add("welcome-email",
+            const job = await emailQueue.add("confirm-email",
                 {
                     email: parsedData.EMAIL,
-                    name: parsedData.NAME
+                    name: parsedData.NAME,
+                    userId: createdUser.ID
                 },
                 {
                     attempts: 5,

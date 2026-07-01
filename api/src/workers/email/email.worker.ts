@@ -1,9 +1,9 @@
 import "dotenv/config"
 
 import { Worker } from "bullmq";
-import EmailService from "../modules/email/email.services";
+import EmailService from "./email.services";
 import { ConnectionOptions } from "bullmq";
-import { createRedisConnection } from "./redis";
+import { createRedisConnection } from "../../lib/redis";
 
 const worker = new Worker(
 
@@ -13,13 +13,15 @@ const worker = new Worker(
         console.log("Recebi job:", job.name);
         switch (job.name) {
 
-            case "welcome-email":
+            case "confirm-email":
 
-                await EmailService.sendWelcomeEmail(
+                await EmailService.sendConfirmEmail(
 
                     job.data.email,
 
-                    job.data.name
+                    job.data.name,
+
+                    job.data.userId
 
                 );
 

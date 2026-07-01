@@ -1,15 +1,15 @@
 import { resend } from "../../lib/resend";
-import { welcomeTemplate } from "./templates/welcome.template";
+import { confirmEmailTemplate } from "./templates/confirm-email.template";
 
 export default class EmailService {
-    static async sendWelcomeEmail(email: string, name: string) {
+    static async sendConfirmEmail(email: string, name: string, userId: number) {
 
         try {
             const { data, error } = await resend.emails.send({
                 from: `Sistema Auth <${process.env.RESEND_FROM_EMAIL}>`,
                 to: email,
                 subject: "Bem vindo!",
-                html: welcomeTemplate(name)
+                html: confirmEmailTemplate(name, userId)
             });
 
             if (error) {

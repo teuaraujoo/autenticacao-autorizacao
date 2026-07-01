@@ -9,5 +9,6 @@ router.post("/login", loginLimiter, AuthController.login);
 router.post("/logout", refreshTokenMiddleware, AuthController.logout);
 router.post("/refresh", refreshTokenMiddleware, AuthController.refresh);
 router.get("/me", accessTokenMiddleware, AuthController.me);
+router.get("/confirm-email/:userId", loginLimiter , AuthController.confirmEmail);
 
 export default router;
