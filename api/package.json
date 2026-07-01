@@ -4,18 +4,21 @@
   "scripts": {
     "dev": "tsx watch index.ts",
     "build": "tsc",
+    "worker": "tsx watch src/queues/email.worker.ts",
     "start": "node dist/index.ts"
   },
   "dependencies": {
     "@prisma/adapter-mariadb": "^7.8.0",
     "@prisma/client": "^7.8.0",
     "bcrypt": "^6.0.0",
+    "bullmq": "^5.79.2",
     "compression": "^1.8.1",
     "cookie-parser": "^1.4.7",
     "dotenv": "^17.4.2",
     "express": "^5.2.1",
     "express-rate-limit": "^8.5.2",
     "helmet": "^8.2.0",
+    "ioredis": "^5.11.1",
     "jsonwebtoken": "^9.0.3",
     "mysql2": "^3.22.5",
     "prisma": "^7.8.0",

@@ -3,6 +3,7 @@ import jwt from "jsonwebtoken";
 import ApiError from "../../error/app-error";
 import { CreateUserBody, createUserSchema } from "./users.schemas";
 import { UserRepository } from "./users.repositories";
+import { emailQueue } from "../../queues/email.queue";
 
 export class UserServices {
 
@@ -22,7 +23,21 @@ export class UserServices {
                 PASSWORD_HASH: hashPassword
             };
 
-            return await UserRepository.createUser(parsedData);
+            await UserRepository.createUser(parsedData);
+
+            const job = await emailQueue.add("welcome-email",
+                {
+                    email: parsedData.EMAIL,
+                    name: parsedData.NAME
+                },
+                {
+                    attempts: 5,
+                    backoff: {
+                        type: "exponential", delay: 5000
+                    }
+                });
+
+            console.log("job id: ", job.id);
 
         } catch (err) {
             throw err;

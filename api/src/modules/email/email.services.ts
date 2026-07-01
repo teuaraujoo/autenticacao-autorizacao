@@ -14,12 +14,14 @@ export default class EmailService {
 
             if (error) {
                 console.error("Error retornado do console resend: ", error);
+                throw error;
             };
 
             console.log("Email enviado com sucesso: ", data);
 
         } catch (err) {
             console.error("Error ao enviar email.", err);
+            throw err;
         };
     };
 };
