@@ -52,34 +52,17 @@ export default class AuthController {
     };
 
     static async refresh(req: Request, res: Response) {
-        try {
-            const result = await AuthService.refresh(req.refreshToken);
+        const result = await AuthService.refresh(req.refreshToken);
 
-            res.cookie("accessToken", result.accessToken, {
-                httpOnly: true,
-                secure: process.env.NODE_ENV === "production",
-                sameSite: process.env.NODE_ENV === "production" ? "none" : "lax",
-                maxAge: 1000 * 60 * 100,
-                path: "/"
-            });
+        res.cookie("accessToken", result.accessToken, {
+            httpOnly: true,
+            secure: process.env.NODE_ENV === "production",
+            sameSite: process.env.NODE_ENV === "production" ? "none" : "lax",
+            maxAge: 1000 * 60 * 100,
+            path: "/"
+        });
 
-            res.status(200).json({ message: "Token renovado com sucesso." });
-
-        } catch (err) {
-            if (err instanceof ApiError && err.statusCode === 401) {
-
-                res.clearCookie("accessToken");
-                res.clearCookie("refreshToken");
-
-                return res.status(err.statusCode).json({
-                    message: err.message,
-                });
-            };
-
-            return res.status(500).json({
-                message: "Erro interno do servidor.",
-            });
-        };
+        res.status(200).json({ message: "Token renovado com sucesso." });
     };
 
     static async me(req: Request, res: Response) {
