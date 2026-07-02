@@ -1,11 +1,11 @@
 import cookieParser from "cookie-parser";
 import "dotenv/config"
 import express from "express"
-import userRoutes from "./src/modules/users/users.routes";
-import authRoutes from "./src/modules/auth/auth.routes";
+import userRoutes from "./modules/users/users.routes";
+import authRoutes from "./modules/auth/auth.routes";
 import helmet from "helmet";
 import compression from "compression";
-import { errorHandler } from "./src/middleware/error.middleware";
+import { errorHandler } from "./middleware/error.middleware";
 
 const app = express();
 
