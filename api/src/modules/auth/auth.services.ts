@@ -19,7 +19,7 @@ export default class AuthService {
 
             if (!user) throw new ApiError("Senha ou email inválidos.", 401);
 
-            if (user.EMAIL_VERIFY) throw new ApiError("Realize a verificação do email antes do login.", 409);
+            if (!user.EMAIL_VERIFY) throw new ApiError("Realize a verificação do email antes do login.", 409);
 
             const correctPassword = await bcrypt.compare(body.password, user.PASSWORD_HASH);
 
