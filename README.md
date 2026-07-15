@@ -216,7 +216,7 @@ yarn start      # executa a build compilada
 
 ## Deploy
 
-O projeto foi deployado no Render, com variáveis de ambiente configuradas no painel do serviço. A API expõe um endpoint /health para checagem de saúde do serviço.
+O projeto conta com uma **pipeline CI/CD** utilizando **GitHub Actions**. Cada push para a branch **main** dispara a pipeline responsável por instalar as dependências, gerar o Prisma Client, validar o código com TypeScript, compilar a aplicação e, somente após todas as etapas serem concluídas com sucesso, realizar o deploy automático através do **Deploy Hook do Render**.
 
 ## Observações importantes
 
