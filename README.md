@@ -27,6 +27,7 @@ A aplicação foi pensada como uma API backend para gerenciar autenticação de 
 - Confirmação de e-mail via endpoint específico
 - Envio de e-mails de confirmação em fila com BullMQ + Redis
 - Rate limiting nas rotas de login
+- Cache para informações de me
 - Middleware global de tratamento de erros
 
 ## Stack principal
@@ -206,6 +207,7 @@ yarn start      # executa a build compilada
 
 - BullMQ usa Redis para enfileirar e processar tarefas assíncronas
 - o worker de e-mail consome os jobs da fila "emails"
+- Redis é usado para guardar informações do endpoint api/me em cache (aprendizado)
 
 ### Envio de e-mail
 
