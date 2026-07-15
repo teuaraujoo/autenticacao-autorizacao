@@ -68,7 +68,7 @@ export default class AuthController {
     static async me(req: Request, res: Response) {
         const result = await AuthService.me(req.user.email);
 
-        return res.status(200).json({ message: "Informações encontradas com sucesso.", data: result.user });
+        return res.status(200).json({ message: "Informações encontradas com sucesso.", data: result });
     };
 
     static async confirmEmail(req: Request, res: Response) {

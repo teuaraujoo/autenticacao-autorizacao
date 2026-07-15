@@ -5,6 +5,8 @@ import { LoginBody, loginUserSchema } from "./auth.schemas";
 import { UserRepository } from "../users/users.repositories";
 import ApiError from "../../error/app-error";
 import { AuthRepository } from "./auth.repositories";
+import { cache } from "../../lib/cache";
+import { CreateUserBody } from "../users/users.schemas";
 
 export default class AuthService {
 
@@ -105,18 +107,25 @@ export default class AuthService {
 
     static async me(email: string) {
         try {
+            const key = `cache:user:${email}`;
+
+            const cachedUser = await cache.get(key);
+
+            if (cachedUser) return cachedUser;
 
             const user = await UserRepository.getUserByEmail(email)
 
             if (!user) throw new ApiError("Usuário não encontrado.", 404);
 
-            return {
-                user: {
-                    id: user?.ID,
-                    name: user?.NAME,
-                    email: user?.EMAIL
-                },
-            };
+            const data = {
+                id: user?.ID,
+                name: user?.NAME,
+                email: user?.EMAIL
+            }
+
+            await cache.set(key, data);
+
+            return data;
 
         } catch (err) {
             throw err;
