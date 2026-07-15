@@ -4,6 +4,7 @@ on:
   push:
     branches:
       - main
+
 jobs:
   validate:
     runs-on: ubuntu-latest
@@ -22,6 +23,15 @@ jobs:
           cache-dependency-path: api/yarn.lock
 
       - run: corepack enable
+
       - run: yarn install --immutable
+
+      - run: yarn prisma generate
+
       - run: yarn typecheck
+
       - run: yarn build
+
+      - name: Trigger Render Deploy
+        if: success()
+        run: curl -X POST "${{ secrets.RENDER_DEPLOY_HOOK }}"
