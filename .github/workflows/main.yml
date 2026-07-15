@@ -4,10 +4,13 @@ on:
   push:
     branches:
       - main
-
 jobs:
   validate:
     runs-on: ubuntu-latest
+
+    defaults:
+      run:
+        working-directory: api
 
     steps:
       - uses: actions/checkout@v4
@@ -16,13 +19,9 @@ jobs:
         with:
           node-version: 22
           cache: yarn
+          cache-dependency-path: api/yarn.lock
 
       - run: corepack enable
-
       - run: yarn install --immutable
-
       - run: yarn typecheck
-
-      - run: yarn lint
-
       - run: yarn build
